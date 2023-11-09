@@ -1,2 +1,9 @@
 venv_ocr_python/*
+transformers/*
+data/*.jpg
+data/*.pdf
+*.idea
 *.jpg
+*.zip
+*.csv
+*.json
