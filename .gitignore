@@ -7,3 +7,5 @@ data/*.pdf
 *.zip
 *.csv
 *.json
+build
+dist
