@@ -1,4 +1,6 @@
 import os
+import traceback
+
 from image_input import ImageInput
 from table_detection import TableDetection
 from table_layout_detection import TableLayoutDetection
@@ -11,7 +13,7 @@ class TableFinder:
     def __init__(self, path_to_tesseract: str = ""):
         self.table_detection_model = TableDetection()
         self.table_layout_detection_model = TableLayoutDetection()
-        self.ocr = OCRResolver()
+        self.ocr = OCRResolver(path_to_tesseract)
 
     def read_image_and_write_table_in_json(self, path_to_img: str,
                                            path_to_save: str):
@@ -36,7 +38,11 @@ class TableFinder:
             output_formatter.write_result(json_str_result)
         except IndexError as e:
             print(f"No table for {path_to_img}")
+        except ValueError as e:
+            print(f"Wrong formatting for {path_to_img}")
+            print(traceback.format_exc())
         except Exception as e:
+            print(traceback.format_exc())
             print(f"Strange excpetion {path_to_img}")
             print(e)
 
