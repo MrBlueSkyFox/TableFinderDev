@@ -1,11 +1,9 @@
 venv_ocr_python/*
 transformers/*
-data/*.jpg
-data/*.pdf
+data
 *.idea
-*.jpg
+
 *.zip
-*.csv
-*.json
 build
 dist
+*.spec
