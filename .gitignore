@@ -1,10 +1,11 @@
 venv_ocr_python/*
 transformers/*
-data
-*.idea
-
-*.zip
+__pycache__/
 build
 dist
+res
+models
+
 *.spec
-__pycache__/
+*.zip
+*.idea
