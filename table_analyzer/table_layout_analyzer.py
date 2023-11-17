@@ -1,10 +1,10 @@
 import torch
 from transformers import AutoFeatureExtractor, AutoModelForObjectDetection
 
-from founded_table_objects import FoundedTableObjects
+from cell_types import FoundedTableObjects
 
 
-class TableLayoutDetection:
+class TableLayoutAnalyzer:
     def __init__(self):
         self.extractor = AutoFeatureExtractor.from_pretrained("microsoft/table-transformer-structure-recognition")
         self.model = AutoModelForObjectDetection.from_pretrained("microsoft/table-transformer-structure-recognition")

@@ -1,8 +1,8 @@
-from founded_cell import FoundedCell
-from ocr_resolver import OCRResolver
+from ocr import OCRResolver
+from cell_types import FoundedCell
 
 
-class CellStructureResolver:
+class TableStructureExtractor:
     def __init__(self, ocr_instance: OCRResolver):
         self.ocr = ocr_instance
 
@@ -42,14 +42,14 @@ class CellStructureResolver:
         for columns in cols_data:
             for rows in rows_data:
                 xmin_inter, ymin_inter, xmax_inter, ymax_inter = \
-                    CellStructureResolver.find_intersection(columns.xmin,
-                                                            columns.ymin,
-                                                            columns.xmax,
-                                                            columns.ymax,
-                                                            rows.xmin,
-                                                            rows.ymin,
-                                                            rows.xmax,
-                                                            rows.ymax)
+                    TableStructureExtractor.find_intersection(columns.xmin,
+                                                              columns.ymin,
+                                                              columns.xmax,
+                                                              columns.ymax,
+                                                              rows.xmin,
+                                                              rows.ymin,
+                                                              rows.xmax,
+                                                              rows.ymax)
                 cell = FoundedCell(xmin_inter, ymin_inter, xmax_inter, ymax_inter)
                 founded_cells.append(cell)
         return founded_cells
@@ -95,7 +95,7 @@ class CellStructureResolver:
     def restore_table_format(cells: list[FoundedCell], column_len: int) -> list[list[str]]:
         result_data = []
         for i in range(0, len(cells), column_len):
-            row = CellStructureResolver.sort_by_x(cells[i:i + column_len])
+            row = TableStructureExtractor.sort_by_x(cells[i:i + column_len])
             res_row = []
             for r in row:
                 res_text = r.text
