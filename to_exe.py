@@ -1,7 +1,7 @@
 import PyInstaller.__main__
 
 PyInstaller.__main__.run([
-    'exutable_entry_poin.py',
+    'executable_entry_point.py',
     "--name=table_finder",
     '--onefile',
 
@@ -11,7 +11,6 @@ PyInstaller.__main__.run([
     # "--add-data=models;models",
     "--collect-submodules", "transformers",
     "--hidden-import", "numpy",
-    # "--hidden-import", "torch"
     "--collect-data", "torch",
     "--collect-data", "pytesseract",
     "--collect-data", "pandas",
@@ -29,7 +28,6 @@ PyInstaller.__main__.run([
     "--copy-metadata", "pyyaml",
     "--copy-metadata", "pytesseract",
     "--copy-metadata", "timm"
-    # '--windowed'
 ])
 
 # exutable_entry_poin.exe
