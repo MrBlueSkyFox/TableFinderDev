@@ -21,9 +21,13 @@ class ImageInput:
         return image
 
     def get_image(self):
+        if not self.image:
+            print("Image empty")
         return self.image
 
     def get_image_crop(self):
+        if not self.img_crop:
+            print("Img crop empty")
         return self.img_crop
 
     def crop_detected_table(self, result):
