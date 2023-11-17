@@ -2,18 +2,16 @@ import os
 import traceback
 
 from image_input import ImageInput
-from table_detection import TableDetection
-from table_layout_detection import TableLayoutDetection
-from ocr_resolver import OCRResolver
-from cell_structure_resolver import CellStructureResolver
+from ocr import OCRResolver
+from table_analyzer import TableDetector, TableLayoutAnalyzer, TableStructureExtractor
 from output_resolver import OutputResolver
 
 
-class TableFinder:
-    def __init__(self, path_to_tesseract: str = ""):
-        self.table_detection_model = TableDetection()
-        self.table_layout_detection_model = TableLayoutDetection()
-        self.ocr = OCRResolver(path_to_tesseract)
+class TableExtractor:
+    def __init__(self, path_to_tesseract: str = "", ocr_methods: str = "all"):
+        self.table_detection_model = TableDetector()
+        self.table_layout_detection_model = TableLayoutAnalyzer()
+        self.ocr = OCRResolver(path_to_tesseract, ocr_methods)
 
     def read_image_and_write_table_in_json(self, path_to_img: str,
                                            path_to_save: str):
@@ -28,7 +26,7 @@ class TableFinder:
             columns_data, rows_data, header_data = self.table_layout_detection_model.find_layout_data(
                 table_layout_probs,
                 table_layout_boxes)
-            cell_structure = CellStructureResolver(self.ocr)
+            cell_structure = TableStructureExtractor(self.ocr)
             col_row_data, header_texts = cell_structure.get_table_structure(img_input.get_image_crop(),
                                                                             columns_data, rows_data, header_data)
             basename = get_basename(path_to_img)
