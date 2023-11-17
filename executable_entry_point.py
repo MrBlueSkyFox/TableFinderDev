@@ -16,6 +16,8 @@ if __name__ == "__main__":
     parser.add_argument("-ocr_cache", "--easy_ocr_cache", type=str, required=False,
                         help="Path to the Easy ocr cache models")
     args = parser.parse_args()
+    os.environ['CURL_CA_BUNDLE'] = ''
+    os.environ['REQUESTS_CA_BUNDLE'] = ''
     path_to_transformers_cache = args.transformer_cache
     path_to_easy_ocr_models = args.easy_ocr_cache
     if path_to_transformers_cache:
@@ -42,9 +44,9 @@ if __name__ == "__main__":
     tesseract_path = args.tesseract_path
 
     # Process the image using Tesseract and store the results in a JSON file in the output directory
-    from table_finder import TableFinder
+    from table_extractor import TableExtractor
 
-    table_finder = TableFinder(tesseract_path)
+    table_finder = TableExtractor(tesseract_path)
     table_finder.read_image_and_write_table_in_json(
         path_to_image,
         output_dir)
