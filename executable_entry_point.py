@@ -1,5 +1,6 @@
 import os
 import argparse
+os.environ['MAGICK_HOME'] = './wand'
 
 default_transformer_cache = 'models/'
 default_easy_ocr_models = "models/easy_ocr"
@@ -46,7 +47,7 @@ if __name__ == "__main__":
     # Process the image using Tesseract and store the results in a JSON file in the output directory
     from table_extractor import TableExtractor
 
-    table_finder = TableExtractor(tesseract_path)
+    table_finder = TableExtractor(tesseract_path,dir_to_trans_cache=default_transformer_cache)
     table_finder.read_image_and_write_table_in_json(
         path_to_image,
         output_dir)
