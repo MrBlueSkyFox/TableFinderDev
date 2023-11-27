@@ -2,6 +2,7 @@ venv_ocr_python/*
 transformers/*
 __pycache__/
 build
+data
 dist
 res
 models
