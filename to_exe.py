@@ -27,7 +27,10 @@ PyInstaller.__main__.run([
     "--copy-metadata", "safetensors",
     "--copy-metadata", "pyyaml",
     "--copy-metadata", "pytesseract",
-    "--copy-metadata", "timm"
+    "--copy-metadata", "timm",
+
+    "--add-binary", "C:\Program Files\ImageMagick-7.1.1-Q16-HDRI:wand",
+
 ])
 
 # exutable_entry_poin.exe
