@@ -11,3 +11,4 @@ args to pass
 
 example:
 .\table_finder.exe -p C:\Users\tigra\PycharmProjects\OcrResearch\data\fifo_normalize\FIO_1_page-0001.jpg -o C:\Users\tigra\PycharmProjects\OcrResearch\data\res\res_exe -t "C:\Program Files\Tesseract-OCR\tesseract.exe" -t_cache "C:\Users\tigra\PycharmProjects\OcrResearch\models" -ocr_cache "C:\Users\tigra\PycharmProjects\OcrResearch\models\easy_ocr"
+.\table_finder.exe -p C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\tmp4AF4.jpg -o C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res -t "C:\Program Files\Tesseract-OCR\tesseract.exe" -t_cache "C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models" -ocr_cache "C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models\easy_ocr"
