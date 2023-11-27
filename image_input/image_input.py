@@ -1,3 +1,4 @@
+import numpy as np
 from PIL import Image
 from typing import Optional
 
@@ -8,6 +9,7 @@ class ImageInput:
         self.image_orig = self.read_image(self.path)
         self.image = self.resize_image(self.image_orig)
         self.image_crop: Optional[Image.Image]
+        self.deskew_image_wand()
 
     @staticmethod
     def read_image(path: str):
@@ -19,6 +21,15 @@ class ImageInput:
         width, height = image.size
         image.resize((int(width * 0.5), int(height * 0.5)))
         return image
+
+    def deskew_image_wand(self):
+        from PIL import Image as ImagePIL
+        from wand.image import Image
+        with Image.from_array(np.array(self.image_orig)) as img:
+            img.deskew(0.4 * img.quantum_range)
+            deskew_img = img.clone()
+            deskew_img = ImagePIL.fromarray(np.array(deskew_img))
+            self.image_orig = deskew_img
 
     def get_image(self):
         if not self.image:
