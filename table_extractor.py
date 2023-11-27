@@ -8,8 +8,8 @@ from output_resolver import OutputResolver
 
 
 class TableExtractor:
-    def __init__(self, path_to_tesseract: str = "", ocr_methods: str = "all"):
-        self.table_detection_model = TableDetector()
+    def __init__(self, path_to_tesseract: str = "", ocr_methods: str = "all",dir_to_trans_cache=""):
+        self.table_detection_model = TableDetector(dir_to_trans_cache)
         self.table_layout_detection_model = TableLayoutAnalyzer()
         self.ocr = OCRResolver(path_to_tesseract, ocr_methods)
 
