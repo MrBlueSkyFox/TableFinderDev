@@ -1,4 +1,5 @@
 venv_ocr_python/*
+venv
 transformers/*
 __pycache__/
 build
