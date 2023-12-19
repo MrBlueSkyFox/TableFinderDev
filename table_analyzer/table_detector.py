@@ -19,10 +19,12 @@ class TableDetector:
         self.image_processor = AutoImageProcessor.from_pretrained(model_detection_name,
                                                                   cache_dir=default_transformer_cache,
                                                                   force_download=False,
+                                                                  local_files_only=True,
                                                                   token=False)
         self.model = TableTransformerForObjectDetection.from_pretrained(model_layout_detection_name,
                                                                         cache_dir=default_transformer_cache,
                                                                         force_download=False,
+                                                                        local_files_only=True,
                                                                         token=False)
         self.table_minimum_detection_value = 0.8  # from 0 to 1
 

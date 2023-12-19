@@ -5,9 +5,23 @@ from cell_types import FoundedTableObjects
 
 
 class TableLayoutAnalyzer:
-    def __init__(self):
-        self.extractor = AutoFeatureExtractor.from_pretrained("microsoft/table-transformer-structure-recognition")
-        self.model = AutoModelForObjectDetection.from_pretrained("microsoft/table-transformer-structure-recognition")
+    def __init__(self,path_to_transformers: str):
+        # default_transformer_cache = r'C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models'
+        if len(path_to_transformers) > 0:
+            default_transformer_cache = path_to_transformers
+        else:
+            default_transformer_cache = r'C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models'
+
+        self.extractor = AutoFeatureExtractor.from_pretrained("microsoft/table-transformer-structure-recognition",
+                                                              cache_dir=default_transformer_cache,
+                                                              force_download=False,
+                                                              local_files_only=True,
+                                                              token=False)
+        self.model = AutoModelForObjectDetection.from_pretrained("microsoft/table-transformer-structure-recognition",
+                                                                 cache_dir=default_transformer_cache,
+                                                                 force_download=False,
+                                                                 local_files_only=True,
+                                                                 token=False)
 
     def use_table_layout_detection(self, img_with_table):
         encoding = self.extractor(img_with_table, return_tensors="pt")

@@ -59,7 +59,7 @@ def get_data_using_all_ocr(path_to_dir: str, path_to_save: str):
     # path_to_store_base = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\normalize\all"
     pathlib.Path(path_to_save).mkdir(exist_ok=True, parents=True)
     path_to_jpg_im = get_all_jpg_images_in_directory(path_to_dir)
-    for path_to_jpg in path_to_jpg_im:
+    for path_to_jpg in path_to_jpg_im[:2]:
         table_finder.read_image_and_write_table_in_json(
             path_to_jpg,
             path_to_save)

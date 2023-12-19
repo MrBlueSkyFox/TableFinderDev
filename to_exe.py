@@ -10,7 +10,7 @@ PyInstaller.__main__.run([
     # "-add-data", "models/;models/",
     # "--add-data=models;models",
     "--collect-submodules", "transformers",
-    "--hidden-import", "numpy",
+    # "--hidden-import", "numpy",
     "--collect-data", "torch",
     "--collect-data", "pytesseract",
     "--collect-data", "pandas",
