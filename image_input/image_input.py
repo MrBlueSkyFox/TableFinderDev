@@ -9,7 +9,7 @@ class ImageInput:
         self.image_orig = self.read_image(self.path)
         self.image = self.resize_image(self.image_orig)
         self.image_crop: Optional[Image.Image]
-        self.deskew_image_wand()
+        # self.deskew_image_wand()
 
     @staticmethod
     def read_image(path: str):
