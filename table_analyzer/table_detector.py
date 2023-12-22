@@ -5,7 +5,7 @@ from transformers import AutoImageProcessor, TableTransformerForObjectDetection
 
 
 class TableDetector:
-    def __init__(self, path_to_transformers: str):
+    def __init__(self, path_to_transformers: str, min_detection_val: float):
         # default_transformer_cache = r'C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models'
         if len(path_to_transformers) > 0:
             default_transformer_cache = path_to_transformers
@@ -26,7 +26,7 @@ class TableDetector:
                                                                         force_download=False,
                                                                         local_files_only=True,
                                                                         token=False)
-        self.table_minimum_detection_value = 0.8  # from 0 to 1
+        self.table_minimum_detection_value = min_detection_val  # from 0 to 1
 
     def use_table_detection(self, image):
         inputs = self.image_processor(images=image, return_tensors="pt")

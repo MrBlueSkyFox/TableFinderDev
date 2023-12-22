@@ -19,6 +19,8 @@ if __name__ == "__main__":
                         help="Path to the Transformers cache")
     parser.add_argument("-ocr_cache", "--easy_ocr_cache", type=str, required=False,
                         help="Path to the Easy ocr cache models")
+    parser.add_argument("-tr", "--threshold_detect", type=float, required=False,
+                        default=0.8, help="Minimum value for detect table")
     args = parser.parse_args()
     os.environ['CURL_CA_BUNDLE'] = ''
     os.environ['REQUESTS_CA_BUNDLE'] = ''
@@ -46,18 +48,21 @@ if __name__ == "__main__":
     path_to_image = args.path_to_image
     output_dir = args.output_dir
     tesseract_path = args.tesseract_path
-
+    threshold_value = args.threshold_detect
     print("Args value print")
     print(f"path to img {path_to_image}")
     print(f"path to output img {output_dir}")
     print(f"path to tesseract {tesseract_path}")
+    print(f"minimum threshold to detect table {threshold_value}")
 
     print(f"path to easy ocr {default_easy_ocr_models}")
     print(f"path to model dir {default_transformer_cache}")
     # Process the image using Tesseract and store the results in a JSON file in the output directory
     from table_extractor import TableExtractor
 
-    table_finder = TableExtractor(tesseract_path, dir_to_trans_cache=default_transformer_cache)
+    table_finder = TableExtractor(tesseract_path,
+                                  dir_to_trans_cache=default_transformer_cache,
+                                  threshold_detect=threshold_value)
     table_finder.read_image_and_write_table_in_json(
         path_to_image,
         output_dir)
