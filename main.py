@@ -60,7 +60,6 @@ def get_data_using_all_ocr(path_to_dir: str, path_to_save: str):
     pathlib.Path(path_to_save).mkdir(exist_ok=True, parents=True)
     path_to_jpg_im = get_all_jpg_images_in_directory(path_to_dir)
     for path_to_jpg in path_to_jpg_im:
-        print(f"Working on {path_to_jpg}")
         table_finder.read_image_and_write_table_in_json(
             path_to_jpg,
             path_to_save)
@@ -93,13 +92,11 @@ if __name__ == "__main__":
     path_to_dir_deskew_common = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\deskew\deskew_common_lib"
     path_to_dir_deskew_opencv = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\deskew\deskew_opencv"
     path_to_dir_deskew_image_magic = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\deskew\deskew_image_magic"
-    path_to_error = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\data\sm"
 
     path_to_save_deskew_common_table = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\normalize_deskew\deskew_common_lib"
     path_to_save_deskew_opencv_table = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\normalize_deskew\deskew_opencv"
     path_to_save_deskew_image_magic_table = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\normalize_deskew\deskew_image_magic"
-    path_to_save_error = r"C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\res\res_error"
-    get_data_using_all_ocr(path_to_error, path_to_save_error)
-    # get_data_using_all_ocr(path_to_dir_deskew_common, path_to_save_deskew_common_table)
+
+    get_data_using_all_ocr(path_to_dir_deskew_common, path_to_save_deskew_common_table)
     # get_data_using_all_ocr(path_to_dir_deskew_opencv, path_to_save_deskew_opencv_table)
     # get_data_using_all_ocr(path_to_dir_deskew_image_magic, path_to_save_deskew_image_magic_table)

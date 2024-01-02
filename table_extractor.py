@@ -1,5 +1,6 @@
 import os
 import traceback
+from pathlib import Path
 
 from image_input import ImageInput
 from ocr import OCRResolver
@@ -8,17 +9,16 @@ from output_resolver import OutputResolver
 
 
 class TableExtractor:
-    def __init__(
-            self, path_to_tesseract: str = "", ocr_methods: str = "all", dir_to_trans_cache="",
-            threshold_detect: float = 0.8
-    ):
-        self.table_detection_model = TableDetector(dir_to_trans_cache,threshold_detect)
+    def __init__(self, path_to_tesseract: str = "", ocr_methods: str = "all", dir_to_trans_cache="", use_deskew=False):
+        self.table_detection_model = TableDetector(dir_to_trans_cache)
         self.table_layout_detection_model = TableLayoutAnalyzer(dir_to_trans_cache)
         self.ocr = OCRResolver(path_to_tesseract, ocr_methods)
+        self.use_deskew = use_deskew
 
     def read_image_and_write_table_in_json(self, path_to_img: str,
                                            path_to_save: str):
-        img_input = ImageInput(path_to_img)
+        img_input = ImageInput(path_to_img, self.use_deskew)
+        Path(path_to_save).mkdir(parents=True, exist_ok=True)
         table_detection_results_raw = self.table_detection_model.use_table_detection(img_input.get_image())
         table_boxes = self.table_detection_model.get_table_boxes(table_detection_results_raw)
         print(f"Detected tables : {len(table_boxes)}")
