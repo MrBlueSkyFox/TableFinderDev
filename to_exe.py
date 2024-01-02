@@ -1,5 +1,10 @@
 import PyInstaller.__main__
+from sys import platform
 
+if platform == "win32":
+    image_magic_path = "D:\Programms\ImageMagick-7.1.1-Q16-HDRI:wand"
+else:
+    image_magic_path = "/usr/bin/convert:wand/convert"  # not sure if this works
 PyInstaller.__main__.run([
     'executable_entry_point.py',
     "--name=table_finder",
@@ -28,8 +33,10 @@ PyInstaller.__main__.run([
     "--copy-metadata", "pyyaml",
     "--copy-metadata", "pytesseract",
     "--copy-metadata", "timm",
+    # "--exclude-module", "torch\test",
 
-    "--add-binary", "C:\Program Files\ImageMagick-7.1.1-Q16-HDRI:wand",
+    "--add-binary", image_magic_path,
+    "--exclude-module", "tkinter",
 
 ])
 
