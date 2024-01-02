@@ -1,6 +1,10 @@
 from domain.model import TableBox, Cell
 
 
+class NotFoundTable(IndexError):
+    pass
+
+
 def process_output_from_table_detector(detection_raw: dict) -> list[TableBox]:
     table_boxes = []  # type list[TableBox]
     for box, confidence in zip(

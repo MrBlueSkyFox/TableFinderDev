@@ -1,15 +1,13 @@
 import torch
 from transformers import AutoImageProcessor, TableTransformerForObjectDetection
-
-from .table_model_interface import TableInterface
-from .types import probability
+from .. import types, table_model_interface
 
 
-class TableDetector(TableInterface):
+class TableDetector(table_model_interface.TableInterface):
     def __init__(self,
                  path_to_model: str,
                  model_name: str,
-                 threshold: probability = 0.8
+                 threshold: types.probability = 0.8
                  ):
         super().__init__(path_to_model, model_name, threshold)
         self.image_processor = AutoImageProcessor.from_pretrained(self.model_name,
