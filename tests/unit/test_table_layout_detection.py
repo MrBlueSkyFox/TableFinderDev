@@ -1,5 +1,3 @@
-from PIL import Image
-
 from domain.model import TableBox, Cell
 
 from service_layer import handlers
@@ -15,8 +13,7 @@ path_to_image = r"D:\PycharmMainProjects\TableFinderDev\tests\FIO_1_0.jpg"
 # TODO
 # 1) change duplicate code to fixture
 
-def test_found_table_layout():
-    img = Image.open(path_to_image)
+def test_found_table_layout(img):
     table_box = TableBox(
         Cell(
             150.7137908935547,
@@ -43,8 +40,7 @@ def test_found_table_layout():
     assert len(table_layout.header) == 1
 
 
-def test_found_table_layout_with_cells_in_order():
-    img = Image.open(path_to_image)
+def test_found_table_layout_with_cells_in_order(img):
     table_box = TableBox(
         Cell(
             150.7137908935547,

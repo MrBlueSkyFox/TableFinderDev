@@ -1,8 +1,6 @@
 import os.path
 
 import pytest
-import numpy as np
-from PIL import Image
 
 from domain.model import TableBox, Cell
 from service_layer import handlers
