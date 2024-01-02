@@ -9,6 +9,16 @@ default_transformer_cache = 'models/'
 default_easy_ocr_models = "models/easy_ocr"
 
 
+def get_basename(path: str) -> str:
+    base_file_name = os.path.basename(path)
+    base_file_name = os.path.splitext(base_file_name)[0]
+    return base_file_name
+
+
+def create_output_json(path: str, file_name: str) -> str:
+    return os.path.join(path, file_name + ".json")
+
+
 def args_parser():
     parser = argparse.ArgumentParser()
 
@@ -50,25 +60,36 @@ if __name__ == "__main__":
 
     import PIL.Image
 
-    img = PIL.Image.open(path_to_image)
     from service_layer.table_detection.table_model import TableDetector
     from service_layer.table_layout_detection.table_layout_model import TableLayoutDetector
 
-    table_detector = TableDetector(
-        settings.transformer_cache,
-        settings.table_detection_model_name
-    )
-    table_layout_detector = TableLayoutDetector(
-        settings.transformer_cache,
-        settings.table_layout_model_name
-    )
     from service_layer import handlers
+    from service_layer.table_detection.table_detection_processing import NotFoundTable
 
-    table_ordered = handlers.retrieve_table_layout_with_ordering(
-        img,
-        table_detector,
-        table_layout_detector
-    )
+    try:
+        img = PIL.Image.open(settings.path_to_image)
+        img_name = get_basename(settings.path_to_image)
+        output_json_name = create_output_json(settings.output_dir, img_name)
+        table_detector = TableDetector(
+            settings.transformer_cache,
+            settings.table_detection_model_name
+        )
+        table_layout_detector = TableLayoutDetector(
+            settings.transformer_cache,
+            settings.table_layout_model_name
+        )
+        table_ordered = handlers.retrieve_table_layout_with_ordering(
+            img,
+            table_detector,
+            table_layout_detector
+        )
+        from dataclasses import asdict
+        import json
+
+        with open(output_json_name, "w", encoding="utf8") as file:
+            json.dump(asdict(table_ordered), file, indent=4)
+    except NotFoundTable:
+        print(f"No table for {img_name}")
     print(table_ordered)
     # Process the image using Tesseract and store the results in a JSON file in the output directory
     # from table_extractor import TableExtractor
