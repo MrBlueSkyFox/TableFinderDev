@@ -8,7 +8,7 @@ from __future__ import annotations
 #                       with cells boxes and text in right order
 
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -25,8 +25,22 @@ class TableStructure:
 
 
 @dataclass
-class TableStructureOrdered:
+class TableProperty:
+    number_of_columns: int = field(init=False)
+    number_of_rows: int = field(init=False)
+
+
+@dataclass
+class TableStructureOrdered(TableProperty):
     cells: list[list[Cell]]
+
+    @property
+    def number_of_columns(self) -> int:
+        return len(self.cells)
+
+    @property
+    def number_of_rows(self) -> int:
+        return len(self.cells[0])
 
 
 @dataclass(frozen=True)
