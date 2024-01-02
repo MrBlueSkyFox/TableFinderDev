@@ -1,15 +1,13 @@
 import torch
 from transformers import AutoFeatureExtractor, AutoModelForObjectDetection
-
-from .table_model_interface import TableInterface
-from .types import probability
+from .. import types, table_model_interface
 
 
-class TableLayoutDetector(TableInterface):
+class TableLayoutDetector(table_model_interface.TableInterface):
     def __init__(self,
                  path_to_model: str,
                  model_name: str = "microsoft/table-transformer-structure-recognition",
-                 detection_threshold: probability = 0.6
+                 detection_threshold: types.probability = 0.6
                  ):
         super().__init__(path_to_model, model_name, detection_threshold)
         self.image_processor = AutoFeatureExtractor.from_pretrained(self.model_name,
