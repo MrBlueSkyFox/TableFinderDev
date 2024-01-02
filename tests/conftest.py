@@ -4,6 +4,9 @@ import os
 
 from PIL import Image
 
+from domain.model import TableBox, Cell
+from service_layer.util import crop_image_by_coord
+
 PROJECT_DIR = r"D:\PycharmMainProjects\TableFinderDev"
 MODEL_DIR = "models"
 TABLE_DETECTOR_MODEL_NAME = "microsoft/table-transformer-detection"
@@ -38,10 +41,6 @@ def table_detection_model_name():
 @pytest.fixture
 def table_detection_layout_model_name():
     return TABLE_LAYOUT_DETECTOR_MODEL_NAME
-
-
-from domain.model import TableBox, Cell
-from service_layer.util import crop_image_by_coord
 
 
 @pytest.fixture
