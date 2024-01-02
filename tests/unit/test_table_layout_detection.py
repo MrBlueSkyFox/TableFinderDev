@@ -5,15 +5,14 @@ from service_layer.table_detection import table_model
 from service_layer.table_layout_detection import table_layout_model, table_layout_detection_processing
 from service_layer.util import crop_image_by_coord
 
-path_to_model = r"D:\PycharmMainProjects\TableFinderDev\models"
-model_name = "microsoft/table-transformer-structure-recognition"
-path_to_image = r"D:\PycharmMainProjects\TableFinderDev\tests\FIO_1_0.jpg"
-
 
 # TODO
-# 1) change duplicate code to fixture
-
-def test_found_table_layout(img):
+# add failure tests
+def test_found_table_layout(
+        img,
+        path_to_detection_models,
+        table_detection_layout_model_name
+):
     table_box = TableBox(
         Cell(
             150.7137908935547,
@@ -30,7 +29,10 @@ def test_found_table_layout(img):
     )
     width, height = img.size
     img.resize((int(width * 0.5), int(height * 0.5)))
-    table_detector = table_layout_model.TableLayoutDetector(path_to_model, model_name)
+    table_detector = table_layout_model.TableLayoutDetector(
+        path_to_detection_models,
+        table_detection_layout_model_name
+    )
     probs, boxes = table_detector.use_detection(img)
 
     table_layout = table_layout_detection_processing. \
@@ -40,7 +42,11 @@ def test_found_table_layout(img):
     assert len(table_layout.header) == 1
 
 
-def test_found_table_layout_with_cells_in_order(img):
+def test_found_table_layout_with_cells_in_order(
+        img,
+        path_to_detection_models,
+        table_detection_layout_model_name
+):
     table_box = TableBox(
         Cell(
             150.7137908935547,
@@ -57,7 +63,11 @@ def test_found_table_layout_with_cells_in_order(img):
     )
     width, height = img.size
     img.resize((int(width * 0.5), int(height * 0.5)))
-    table_detector = table_layout_model.TableLayoutDetector(path_to_model, model_name)
+
+    table_detector = table_layout_model.TableLayoutDetector(
+        path_to_detection_models,
+        table_detection_layout_model_name
+    )
     probs, boxes = table_detector.use_detection(img)
 
     table_layout = table_layout_detection_processing. \
@@ -69,9 +79,20 @@ def test_found_table_layout_with_cells_in_order(img):
     assert len(table_layout.columns) == len(table_layout_ordered.cells[0])
 
 
-def test_retrieve_table_layout_without_ordering_success(img):
-    table_detector = table_model.TableDetector(path_to_model, "microsoft/table-transformer-detection")
-    table_layout_detector = table_layout_model.TableLayoutDetector(path_to_model, model_name)
+def test_retrieve_table_layout_without_ordering_success(
+        img,
+        path_to_detection_models,
+        table_detection_model_name,
+        table_detection_layout_model_name
+):
+    table_detector = table_model.TableDetector(
+        path_to_detection_models,
+        table_detection_model_name
+    )
+    table_layout_detector = table_layout_model.TableLayoutDetector(
+        path_to_detection_models,
+        table_detection_layout_model_name
+    )
     table_without_order = handlers. \
         retrieve_table_layout_without_ordering(img, table_detector, table_layout_detector)
     assert len(table_without_order.rows) == 9
@@ -79,9 +100,20 @@ def test_retrieve_table_layout_without_ordering_success(img):
     assert len(table_without_order.header) == 1
 
 
-def test_retrieve_table_layout_with_ordering(img):
-    table_detector = table_model.TableDetector(path_to_model, "microsoft/table-transformer-detection")
-    table_layout_detector = table_layout_model.TableLayoutDetector(path_to_model, model_name)
+def test_retrieve_table_layout_with_ordering(
+        img,
+        path_to_detection_models,
+        table_detection_model_name,
+        table_detection_layout_model_name
+):
+    table_detector = table_model.TableDetector(
+        path_to_detection_models,
+        table_detection_model_name
+    )
+    table_layout_detector = table_layout_model.TableLayoutDetector(
+        path_to_detection_models,
+        table_detection_layout_model_name
+    )
     table_with_order = handlers. \
         retrieve_table_layout_with_ordering(img, table_detector, table_layout_detector)
     assert len(table_with_order.cells) == 9
