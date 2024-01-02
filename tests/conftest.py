@@ -40,3 +40,29 @@ def table_detection_layout_model_name():
     return TABLE_LAYOUT_DETECTOR_MODEL_NAME
 
 
+from domain.model import TableBox, Cell
+from service_layer.util import crop_image_by_coord
+
+
+@pytest.fixture
+def table_box():
+    table_box = TableBox(
+        Cell(
+            150.7137908935547,
+            615.0811767578125,
+            1472.652099609375,
+            1805.0367431640625
+        ),
+        0.95
+    )
+    return table_box
+
+
+@pytest.fixture
+def img_with_table(img, table_box):
+    img = crop_image_by_coord(
+        img,
+        [table_box.box.x_min, table_box.box.y_min,
+         table_box.box.x_max, table_box.box.y_max]
+    )
+    return img

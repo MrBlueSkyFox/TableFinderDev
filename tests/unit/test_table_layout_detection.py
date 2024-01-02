@@ -1,39 +1,22 @@
-from domain.model import TableBox, Cell
-
 from service_layer import handlers
 from service_layer.table_detection import table_model
 from service_layer.table_layout_detection import table_layout_model, table_layout_detection_processing
-from service_layer.util import crop_image_by_coord
 
 
 # TODO
 # add failure tests
 def test_found_table_layout(
-        img,
+        img_with_table,
         path_to_detection_models,
         table_detection_layout_model_name
 ):
-    table_box = TableBox(
-        Cell(
-            150.7137908935547,
-            615.0811767578125,
-            1472.652099609375,
-            1805.0367431640625
-        ),
-        0.95
-    )
-    img = crop_image_by_coord(
-        img,
-        [table_box.box.x_min, table_box.box.y_min,
-         table_box.box.x_max, table_box.box.y_max]
-    )
-    width, height = img.size
-    img.resize((int(width * 0.5), int(height * 0.5)))
+    width, height = img_with_table.size
+    img_with_table.resize((int(width * 0.5), int(height * 0.5)))
     table_detector = table_layout_model.TableLayoutDetector(
         path_to_detection_models,
         table_detection_layout_model_name
     )
-    probs, boxes = table_detector.use_detection(img)
+    probs, boxes = table_detector.use_detection(img_with_table)
 
     table_layout = table_layout_detection_processing. \
         process_output_from_table_layout_detector(probs, boxes)
@@ -43,32 +26,18 @@ def test_found_table_layout(
 
 
 def test_found_table_layout_with_cells_in_order(
-        img,
+        img_with_table,
         path_to_detection_models,
         table_detection_layout_model_name
 ):
-    table_box = TableBox(
-        Cell(
-            150.7137908935547,
-            615.0811767578125,
-            1472.652099609375,
-            1805.0367431640625
-        ),
-        0.95
-    )
-    img = crop_image_by_coord(
-        img,
-        [table_box.box.x_min, table_box.box.y_min,
-         table_box.box.x_max, table_box.box.y_max]
-    )
-    width, height = img.size
-    img.resize((int(width * 0.5), int(height * 0.5)))
+    width, height = img_with_table.size
+    img_with_table.resize((int(width * 0.5), int(height * 0.5)))
 
     table_detector = table_layout_model.TableLayoutDetector(
         path_to_detection_models,
         table_detection_layout_model_name
     )
-    probs, boxes = table_detector.use_detection(img)
+    probs, boxes = table_detector.use_detection(img_with_table)
 
     table_layout = table_layout_detection_processing. \
         process_output_from_table_layout_detector(probs, boxes)
