@@ -2,21 +2,12 @@ import os
 import argparse
 
 from settings import SettingsCLI
+from util import get_basename, create_output_json
 
 os.environ['MAGICK_HOME'] = './wand'
 os.environ["CURL_CA_BUNDLE"] = ""
 default_transformer_cache = 'models/'
 default_easy_ocr_models = "models/easy_ocr"
-
-
-def get_basename(path: str) -> str:
-    base_file_name = os.path.basename(path)
-    base_file_name = os.path.splitext(base_file_name)[0]
-    return base_file_name
-
-
-def create_output_json(path: str, file_name: str) -> str:
-    return os.path.join(path, file_name + ".json")
 
 
 def args_parser():
@@ -36,14 +27,7 @@ def args_parser():
     return arguments
 
 
-if __name__ == "__main__":
-    args = args_parser()
-    settings = SettingsCLI(**vars(args))
-    os.environ['CURL_CA_BUNDLE'] = ''
-    os.environ['REQUESTS_CA_BUNDLE'] = ''
-    if settings.easy_ocr_cache:
-        default_easy_ocr_models = settings.easy_ocr_cache
-        os.environ['EASYOCR_MODULE_PATH'] = default_easy_ocr_models
+def set_variables_for_exe():
     import torch.jit
     import warnings
 
@@ -54,9 +38,17 @@ if __name__ == "__main__":
     from transformers import logging
 
     logging.set_verbosity_error()
-    path_to_image = args.path_to_image
-    output_dir = args.output_dir
-    # tesseract_path = args.tesseract_path
+
+
+if __name__ == "__main__":
+    args = args_parser()
+    settings = SettingsCLI(**vars(args))
+    set_variables_for_exe()
+    os.environ['CURL_CA_BUNDLE'] = ''
+    os.environ['REQUESTS_CA_BUNDLE'] = ''
+    if settings.easy_ocr_cache:
+        default_easy_ocr_models = settings.easy_ocr_cache
+        os.environ['EASYOCR_MODULE_PATH'] = default_easy_ocr_models
 
     import PIL.Image
 
@@ -66,10 +58,9 @@ if __name__ == "__main__":
     from service_layer import handlers
     from service_layer.table_detection.table_detection_processing import NotFoundTable
 
+    img_name = get_basename(settings.path_to_image)
+    output_json_name = create_output_json(settings.output_dir, img_name)
     try:
-        img = PIL.Image.open(settings.path_to_image)
-        img_name = get_basename(settings.path_to_image)
-        output_json_name = create_output_json(settings.output_dir, img_name)
         table_detector = TableDetector(
             settings.transformer_cache,
             settings.table_detection_model_name
@@ -78,6 +69,7 @@ if __name__ == "__main__":
             settings.transformer_cache,
             settings.table_layout_model_name
         )
+        img = PIL.Image.open(settings.path_to_image)
         table_ordered = handlers.retrieve_table_layout_with_ordering(
             img,
             table_detector,
@@ -88,9 +80,10 @@ if __name__ == "__main__":
 
         with open(output_json_name, "w", encoding="utf8") as file:
             json.dump(asdict(table_ordered), file, indent=4)
+        print(table_ordered)
     except NotFoundTable:
         print(f"No table for {img_name}")
-    print(table_ordered)
+
     # Process the image using Tesseract and store the results in a JSON file in the output directory
     # from table_extractor import TableExtractor
     #

@@ -16,4 +16,6 @@ def get_all_jpg_images_in_directory(directory):
         if filename.endswith(".jpg"):
             jpg_images.append(os.path.join(directory, filename))
 
-    return jpg_images
+
+def create_output_json(path: str, file_name: str) -> str:
+    return os.path.join(path, file_name + ".json")
