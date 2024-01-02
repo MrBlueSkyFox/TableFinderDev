@@ -12,10 +12,9 @@ PROJECT_DIR = r"D:\PycharmMainProjects\TableFinderDev"
 path_to_model = os.path.join(PROJECT_DIR, "models")
 
 model_name = "microsoft/table-transformer-detection"
-path_to_image = os.path.join(PROJECT_DIR, "tests\\FIO_1_0.jpg")
 
 
-def test_find_table():
+def test_find_table(img):
     excepted_table_box = TableBox(
         Cell(
             150.7137908935547,
@@ -25,7 +24,6 @@ def test_find_table():
         ),
         0.95
     )
-    img = Image.open(path_to_image)
     width, height = img.size
     img.resize((int(width * 0.5), int(height * 0.5)))
     table_detector = table_model.TableDetector(path_to_model, model_name)
@@ -37,16 +35,14 @@ def test_find_table():
     assert first_table_box.box == excepted_table_box.box
 
 
-def test_not_found_table():
-    arr = np.zeros([1653, 2337, 3], dtype=np.uint8)
-    img = Image.fromarray(arr)
+def test_not_found_table(img_empty):
     table_detector = table_model.TableDetector(path_to_model, model_name, threshold=1)
     with pytest.raises(ValueError):
-        res = table_detector.use_detection(img)
+        res = table_detector.use_detection(img_empty)
         table_confidence = float(res["scores"])
 
 
-def test_retrieve_table_box_and_confidence_success():
+def test_retrieve_table_box_and_confidence_success(img):
     excepted_table_box = TableBox(
         Cell(
             150.7137908935547,
@@ -56,7 +52,6 @@ def test_retrieve_table_box_and_confidence_success():
         ),
         0.95
     )
-    img = Image.open(path_to_image)
     width, height = img.size
     img.resize((int(width * 0.5), int(height * 0.5)))
     table_detector = table_model.TableDetector(path_to_model, model_name)
@@ -65,9 +60,7 @@ def test_retrieve_table_box_and_confidence_success():
     assert table_in_image.box == excepted_table_box.box
 
 
-def test_retrieve_table_box_and_confidence_failure():
-    arr = np.zeros([1653, 2337, 3], dtype=np.uint8)
-    img = Image.fromarray(arr)
+def test_retrieve_table_box_and_confidence_failure(img_empty):
     table_detector = table_model.TableDetector(path_to_model, model_name, threshold=1)
     with pytest.raises(table_detection_processing.NotFoundTable):
-        table_not_found = handlers.retrieve_table_box_and_confidence(img, table_detector)
+        table_not_found = handlers.retrieve_table_box_and_confidence(img_empty, table_detector)
