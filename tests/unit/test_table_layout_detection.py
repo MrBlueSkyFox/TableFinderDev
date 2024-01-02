@@ -1,6 +1,9 @@
 from PIL import Image
 
 from domain.model import TableBox, Cell
+
+from service_layer import handlers
+from service_layer.table_detection import table_model
 from service_layer.table_layout_detection import table_layout_model, table_layout_detection_processing
 from service_layer.util import crop_image_by_coord
 
@@ -68,10 +71,6 @@ def test_found_table_layout_with_cells_in_order():
 
     assert len(table_layout.rows) == len(table_layout_ordered.cells)
     assert len(table_layout.columns) == len(table_layout_ordered.cells[0])
-
-
-from service_layer.table_detection import table_model
-from service_layer import handlers
 
 
 def test_retrieve_table_layout_without_ordering_success(img):
