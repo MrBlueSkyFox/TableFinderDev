@@ -1,3 +1,4 @@
+import PIL.Image
 import torch
 from transformers import AutoImageProcessor, TableTransformerForObjectDetection
 from .. import types, table_model_interface
@@ -21,11 +22,14 @@ class TableDetector(table_model_interface.TableInterface):
                                                                         force_download=False,
                                                                         token=False)
 
-    def use_detection(self, image):
-        inputs = self.image_processor(images=image, return_tensors="pt")
+    def _inference(self, img):
+        inputs = self.image_processor(images=img, return_tensors="pt")
         outputs = self.model(**inputs)
-        target_sizes = torch.tensor([image.size[::-1]])
+        target_sizes = torch.tensor([img.size[::-1]])
         results = self.image_processor.post_process_object_detection(outputs,
                                                                      threshold=self.threshold,
                                                                      target_sizes=target_sizes)[0]
         return results
+
+    def _preprocess_image(self, img) -> PIL.Image.Image:
+        return img

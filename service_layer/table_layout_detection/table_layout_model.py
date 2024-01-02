@@ -1,3 +1,4 @@
+import PIL.Image
 import torch
 from transformers import AutoFeatureExtractor, AutoModelForObjectDetection
 from .. import types, table_model_interface
@@ -21,8 +22,8 @@ class TableLayoutDetector(table_model_interface.TableInterface):
                                                                  force_download=False,
                                                                  token=False)
 
-    def use_detection(self, image):
-        encoding = self.image_processor(image, return_tensors="pt")
+    def _inference(self, img):
+        encoding = self.image_processor(img, return_tensors="pt")
         encoding.keys()
         with torch.no_grad():
             outputs = self.model(**encoding)
@@ -32,10 +33,13 @@ class TableLayoutDetector(table_model_interface.TableInterface):
         keep = probas.max(-1).values > self.threshold
 
         # rescale bounding boxes
-        target_sizes = torch.tensor(image.size[::-1]).unsqueeze(0)
+        target_sizes = torch.tensor(img.size[::-1]).unsqueeze(0)
         postprocessor_outputs = self.image_processor.post_process(outputs, target_sizes)
         bboxes_scaled_lay = postprocessor_outputs[0]['boxes'][keep]
 
         probs_keeping = probas[keep]
         boxes = bboxes_scaled_lay
         return probs_keeping, boxes
+
+    def _preprocess_image(self, img) -> PIL.Image.Image:
+        return img

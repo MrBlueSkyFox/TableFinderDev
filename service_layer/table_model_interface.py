@@ -20,6 +20,15 @@ class TableInterface:
         self.image_processor: AutoImageProcessor
         self.model: AutoModelForObjectDetection
 
-    @abstractmethod
     def use_detection(self, image: PIL.Image.Image):
+        image = self._preprocess_image(image)
+        res = self._inference(image)
+        return res
+
+    @abstractmethod
+    def _inference(self, img):
+        pass
+
+    @abstractmethod
+    def _preprocess_image(self, img) -> PIL.Image.Image:
         pass
