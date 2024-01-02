@@ -4,12 +4,13 @@ from typing import Optional
 
 
 class ImageInput:
-    def __init__(self, path_to_image: str):
+    def __init__(self, path_to_image: str, use_deskew: bool):
         self.path = path_to_image
         self.image_orig = self.read_image(self.path)
         self.image = self.resize_image(self.image_orig)
         self.image_crop: Optional[Image.Image]
-        # self.deskew_image_wand()
+        if use_deskew:
+            self.deskew_image_wand()
 
     @staticmethod
     def read_image(path: str):

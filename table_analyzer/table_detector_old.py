@@ -1,5 +1,4 @@
-import os.path
-
+import PIL.Image
 import torch
 from transformers import AutoImageProcessor, TableTransformerForObjectDetection
 
@@ -10,7 +9,7 @@ class TableDetector:
         if len(path_to_transformers) > 0:
             default_transformer_cache = path_to_transformers
         else:
-            default_transformer_cache = r'C:\Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models'
+            default_transformer_cache = r'models'
 
         model_detection_name = 'microsoft/table-transformer-detection'
         model_layout_detection_name = 'microsoft/table-transformer-detection'
@@ -28,14 +27,17 @@ class TableDetector:
                                                                         token=False)
         self.table_minimum_detection_value = min_detection_val  # from 0 to 1
 
-    def use_table_detection(self, image):
-        inputs = self.image_processor(images=image, return_tensors="pt")
+    def _inference(self, img):
+        inputs = self.image_processor(images=img, return_tensors="pt")
         outputs = self.model(**inputs)
-        target_sizes = torch.tensor([image.size[::-1]])
+        target_sizes = torch.tensor([img.size[::-1]])
         results = self.image_processor.post_process_object_detection(outputs,
                                                                      threshold=self.table_minimum_detection_value,
                                                                      target_sizes=target_sizes)[0]
         return results
+
+    def _preprocess_image(self, img) -> PIL.Image.Image:
+        return img
 
     def get_table_boxes(self, results):
         return results["boxes"].tolist()
