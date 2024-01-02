@@ -10,8 +10,6 @@ def test_found_table_layout(
         path_to_detection_models,
         table_detection_layout_model_name
 ):
-    width, height = img_with_table.size
-    img_with_table.resize((int(width * 0.5), int(height * 0.5)))
     table_detector = table_layout_model.TableLayoutDetector(
         path_to_detection_models,
         table_detection_layout_model_name
@@ -30,9 +28,6 @@ def test_found_table_layout_with_cells_in_order(
         path_to_detection_models,
         table_detection_layout_model_name
 ):
-    width, height = img_with_table.size
-    img_with_table.resize((int(width * 0.5), int(height * 0.5)))
-
     table_detector = table_layout_model.TableLayoutDetector(
         path_to_detection_models,
         table_detection_layout_model_name

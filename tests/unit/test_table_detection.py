@@ -10,8 +10,6 @@ def test_find_table(
         table_detection_model_name,
         table_box
 ):
-    width, height = img.size
-    img.resize((int(width * 0.5), int(height * 0.5)))
     table_detector = table_model.TableDetector(
         path_to_detection_models,
         table_detection_model_name
@@ -45,8 +43,6 @@ def test_retrieve_table_box_and_confidence_success(
         table_detection_model_name,
         table_box
 ):
-    width, height = img.size
-    img.resize((int(width * 0.5), int(height * 0.5)))
     table_detector = table_model.TableDetector(
         path_to_detection_models,
         table_detection_model_name
