@@ -15,3 +15,6 @@ def crop_image_by_coord(
     width, height = crop_img.size
     crop_img.resize((int(width * 0.5), int(height * 0.5)))
     return crop_img
+
+
+
