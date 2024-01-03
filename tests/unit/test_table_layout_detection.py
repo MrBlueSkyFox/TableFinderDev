@@ -82,3 +82,5 @@ def test_retrieve_table_layout_with_ordering(
         retrieve_table_layout_with_ordering(img, table_detector, table_layout_detector)
     assert len(table_with_order.cells) == 9
     assert len(table_with_order.cells[0]) == 3
+    assert table_with_order.number_of_rows == 9
+    assert table_with_order.number_of_columns == 3

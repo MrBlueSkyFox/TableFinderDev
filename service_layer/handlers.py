@@ -1,6 +1,8 @@
-from domain.model import TableBox, TableStructure, TableStructureOrdered
+from domain.model import TableBox, TableStructure, TableStructureOrdered, TableStructureOrderedWithText
 from .table_detection import table_model, table_detection_processing
 from .table_layout_detection import table_layout_model, table_layout_detection_processing
+from .ocr import ocr_processing
+from .ocr_interface import OcrInterface
 from . import util
 
 
@@ -46,3 +48,30 @@ def retrieve_table_layout_with_ordering(
     table_structured_with_order = table_layout_detection_processing. \
         process_to_ordered_table_structure(table_structured)
     return table_structured_with_order
+
+
+def retrieve_text_in_table(
+        img,
+        model_detection: table_model.TableDetector,
+        model_detection_layout: table_layout_model.TableLayoutDetector,
+        ocr_modules: list[OcrInterface]
+) -> TableStructureOrderedWithText:
+    table_structured_with_order = retrieve_table_layout_with_ordering(
+        img,
+        model_detection,
+        model_detection_layout
+    )
+    table_box = retrieve_table_box_and_confidence(
+        img,
+        model_detection,
+    )
+    img_with_only_table = util.crop_image_by_coord(
+        img,
+        list(vars(table_box.box).values())
+    )
+    table_ordered_with_text = ocr_processing.ocr_table_cells(
+        img_with_only_table,
+        ocr_modules,
+        table_structured_with_order
+    )
+    return table_ordered_with_text
