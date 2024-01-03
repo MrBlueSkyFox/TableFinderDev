@@ -36,11 +36,15 @@ class TableStructureOrdered(TableProperty):
 
     @property
     def number_of_columns(self) -> int:
-        return len(self.cells)
+        return len(self.cells[0])
 
     @property
     def number_of_rows(self) -> int:
-        return len(self.cells[0])
+        return len(self.cells)
+
+
+class TableStructureOrderedWithText(TableStructureOrdered):
+    cells: list[list[CellWithText]]
 
 
 @dataclass(frozen=True)
