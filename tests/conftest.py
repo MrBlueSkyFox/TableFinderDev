@@ -11,6 +11,9 @@ PROJECT_DIR = r"D:\PycharmMainProjects\TableFinderDev"
 MODEL_DIR = "models"
 TABLE_DETECTOR_MODEL_NAME = "microsoft/table-transformer-detection"
 TABLE_LAYOUT_DETECTOR_MODEL_NAME = "microsoft/table-transformer-structure-recognition"
+PATH_TO_EASY_OCR = os.path.join(MODEL_DIR, "easy_ocr")
+
+PATH_TO_TESSERACT_EXE = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 path_to_image = os.path.join(PROJECT_DIR, "tests\\FIO_1_0.jpg")
 
@@ -41,6 +44,18 @@ def table_detection_model_name():
 @pytest.fixture
 def table_detection_layout_model_name():
     return TABLE_LAYOUT_DETECTOR_MODEL_NAME
+
+
+@pytest.fixture
+def tesseract_path() -> str:
+    # TODO
+    # ADD LOGIC TO SET PATH DEPENDING ON OS
+    return PATH_TO_TESSERACT_EXE
+
+
+@pytest.fixture
+def easy_ocr_path() -> str:
+    return PATH_TO_EASY_OCR
 
 
 @pytest.fixture
