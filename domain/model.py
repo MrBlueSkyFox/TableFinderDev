@@ -43,6 +43,7 @@ class TableStructureOrdered(TableProperty):
         return len(self.cells)
 
 
+@dataclass
 class TableStructureOrderedWithText(TableStructureOrdered):
     cells: list[list[CellWithText]]
 
