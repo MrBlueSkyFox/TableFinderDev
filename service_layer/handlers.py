@@ -1,6 +1,8 @@
-from domain.model import TableBox, TableStructure, TableStructureOrdered
+from domain.model import TableBox, TableStructure, TableStructureOrdered, TableStructureOrderedWithText
 from .table_detection import table_model, table_detection_processing
 from .table_layout_detection import table_layout_model, table_layout_detection_processing
+from .ocr import ocr_processing
+from .ocr_interface import OcrInterface
 from . import util
 
 
@@ -48,12 +50,6 @@ def retrieve_table_layout_with_ordering(
     return table_structured_with_order
 
 
-from .ocr_interface import OcrInterface
-from domain.model import TableStructureOrderedWithText, CellWithText
-from . import util
-from dataclasses import astuple
-
-
 def retrieve_text_in_table(
         img,
         model_detection: table_model.TableDetector,
@@ -69,31 +65,13 @@ def retrieve_text_in_table(
         img,
         model_detection,
     )
-    img_with_only_table = util.crop_image_by_coord(img,
-                                                   list(vars(table_box.box).values())
-                                                   )
-    columns_with_text: list[list[CellWithText]] = []
-    for column in table_structured_with_order.cells:
-        column_with_text: list[CellWithText] = []
-        for cell in column:
-            img_cell = util.crop_image_by_coord(
-                img_with_only_table,
-                list(astuple(cell)),
-                0
-            )
-            text = ""
-            for ocr in ocr_modules:
-                text = ocr.use_ocr(img_cell)
-                if is_text_empty(text):
-                    continue
-                else:
-                    break
-            cell_with_text = CellWithText(*astuple(cell), text=text)
-            column_with_text.append(cell_with_text)
-        columns_with_text.append(column_with_text)
-    table_ordered_with_text = TableStructureOrderedWithText(columns_with_text)
+    img_with_only_table = util.crop_image_by_coord(
+        img,
+        list(vars(table_box.box).values())
+    )
+    table_ordered_with_text = ocr_processing.ocr_table_cells(
+        img_with_only_table,
+        ocr_modules,
+        table_structured_with_order
+    )
     return table_ordered_with_text
-
-
-def is_text_empty(text):
-    return len(text) == 0
