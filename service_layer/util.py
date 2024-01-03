@@ -1,11 +1,13 @@
 import PIL.Image
+import numpy as np
 
 
 def crop_image_by_coord(
         image: PIL.Image.Image,
-        box: list[float, float, float, float]
+        box: list[float, float, float, float],
+        padding: int = 50
 ) -> PIL.Image.Image:
-    padding = 50
+    padding = padding
     xmin, ymin, xmax, ymax = box
     xmax += padding
     ymax += padding
@@ -17,4 +19,6 @@ def crop_image_by_coord(
     return crop_img
 
 
-
+def convert_pill2np(img: PIL.Image) -> np.array:
+    image_numpy = np.array(img)
+    return image_numpy
