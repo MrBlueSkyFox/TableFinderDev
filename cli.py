@@ -1,7 +1,16 @@
 import os
 import argparse
+import PIL.Image
+import json
 
+from dataclasses import asdict
 from settings import SettingsCLI
+
+from service_layer import handlers
+from service_layer.table_detection.table_model import TableDetector
+from service_layer.table_layout_detection.table_layout_model import TableLayoutDetector
+from service_layer.ocr import easy_ocr, tesseract_ocr
+from service_layer.table_detection.table_detection_processing import NotFoundTable
 from util import get_basename, create_output_json
 
 os.environ['MAGICK_HOME'] = './wand'
@@ -50,14 +59,6 @@ if __name__ == "__main__":
         default_easy_ocr_models = settings.easy_ocr_cache
         os.environ['EASYOCR_MODULE_PATH'] = default_easy_ocr_models
 
-    import PIL.Image
-
-    from service_layer.table_detection.table_model import TableDetector
-    from service_layer.table_layout_detection.table_layout_model import TableLayoutDetector
-
-    from service_layer import handlers
-    from service_layer.table_detection.table_detection_processing import NotFoundTable
-
     img_name = get_basename(settings.path_to_image)
     output_json_name = create_output_json(settings.output_dir, img_name)
     try:
@@ -69,26 +70,25 @@ if __name__ == "__main__":
             settings.transformer_cache,
             settings.table_layout_model_name
         )
+        ocr_tesseract = tesseract_ocr.TesseractOCR(settings.tesseract_path)
+        ocr_easy_ocr = easy_ocr.EasyOcr(settings.easy_ocr_cache)
+
         img = PIL.Image.open(settings.path_to_image)
-        table_ordered = handlers.retrieve_table_layout_with_ordering(
+
+        table_ordered_with_text = handlers.retrieve_text_in_table(
             img,
             table_detector,
-            table_layout_detector
+            table_layout_detector,
+            [ocr_tesseract, ocr_easy_ocr]
         )
-        from dataclasses import asdict
-        import json
-
         with open(output_json_name, "w", encoding="utf8") as file:
-            json.dump(asdict(table_ordered), file, indent=4)
-        print(table_ordered)
+            json.dump(asdict(table_ordered_with_text), file, indent=4, ensure_ascii=False)
+        print(f"Found table for {img_name}")
+        print(f"Table str : {table_ordered_with_text}")
+        print(table_ordered_with_text)
     except NotFoundTable:
         print(f"No table for {img_name}")
 
+    except Exception:
+        print(f"Unexpected error for {img_name}")
     # Process the image using Tesseract and store the results in a JSON file in the output directory
-    # from table_extractor import TableExtractor
-    #
-    # table_finder = TableExtractor(tesseract_path, dir_to_trans_cache=default_transformer_cache,
-    #                               use_deskew=args.use_deskew)
-    # table_finder.read_image_and_write_table_in_json(
-    #     path_to_image,
-    #     output_dir)
