@@ -6,7 +6,7 @@ if platform == "win32":
 else:
     image_magic_path = "/usr/bin/convert:wand/convert"  # not sure if this works
 PyInstaller.__main__.run([
-    'executable_entry_point.py',
+    'cli.py',
     "--name=table_finder",
     '--onefile',
 
