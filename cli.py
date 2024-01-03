@@ -11,6 +11,7 @@ from service_layer.table_detection.table_model import TableDetector
 from service_layer.table_layout_detection.table_layout_model import TableLayoutDetector
 from service_layer.ocr import easy_ocr, tesseract_ocr
 from service_layer.table_detection.table_detection_processing import NotFoundTable
+from service_layer.util import deskew_image
 from util import get_basename, create_output_json
 
 os.environ['MAGICK_HOME'] = './wand'
@@ -74,7 +75,8 @@ if __name__ == "__main__":
         ocr_easy_ocr = easy_ocr.EasyOcr(settings.easy_ocr_cache)
 
         img = PIL.Image.open(settings.path_to_image)
-
+        if settings.use_deskew:
+            img = deskew_image(img)
         table_ordered_with_text = handlers.retrieve_text_in_table(
             img,
             table_detector,
