@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     model_config = ConfigDict(extra='allow')
     tesseract_path: str = Field(
-        default=r"C:\Users\USER\AppData\Local\Tesseract-OCR",
+        default=r"C:\Program Files\Tesseract-OCR\tesseract.exe",
         description="Path to tesseract exe for OCR"
     )
     transformer_cache: str = Field(
@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     table_layout_model_name: str = Field(
         default="microsoft/table-transformer-structure-recognition"
     )
+    table_detection_minimum_threshold: float = Field(
+        default=0.8
+    )
 
 
 class SettingsCLI(Settings):
@@ -35,3 +38,7 @@ class SettingsCLI(Settings):
         default=False,
         description="Apply deskew for every image by default"
     )
+
+
+class SettingsWeb(Settings):
+    ...
