@@ -59,7 +59,10 @@ if __name__ == "__main__":
     if settings.easy_ocr_cache:
         default_easy_ocr_models = settings.easy_ocr_cache
         os.environ['EASYOCR_MODULE_PATH'] = default_easy_ocr_models
-
+    os.environ['HF_HOME'] = settings.transformer_cache
+    os.environ['HUGGINGFACE_HUB_CACHE'] = settings.transformer_cache
+    os.environ['TRANSFORMERS_CACHE'] = settings.transformer_cache
+    os.environ['XDG_CACHE_HOME'] = settings.transformer_cache + "/huggingface"
     img_name = get_basename(settings.path_to_image)
     output_json_name = create_output_json(settings.output_dir, img_name)
     try:
@@ -91,6 +94,7 @@ if __name__ == "__main__":
     except NotFoundTable:
         print(f"No table for {img_name}")
 
-    except Exception:
+    except Exception as e:
+        print(e)
         print(f"Unexpected error for {img_name}")
     # Process the image using Tesseract and store the results in a JSON file in the output directory
