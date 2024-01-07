@@ -1,10 +1,7 @@
-import pytest
-
 from service_layer import handlers
+from service_layer.ocr import easy_ocr, tesseract_ocr
 from service_layer.table_detection import table_model
 from service_layer.table_layout_detection import table_layout_model
-
-from service_layer.ocr import easy_ocr, tesseract_ocr
 
 
 def test_retrieve_text_in_table(
