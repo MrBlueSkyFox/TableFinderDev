@@ -3,12 +3,49 @@ version: '3.8'
 services:
   web:
     build: .
-    command: tail -F anything
+    working_dir: /home
+    command: uvicorn service_layer.entrypoints.fast_api_app:app --host 0.0.0.0 --port 80
+    ports:
+      - "80:80"
+    depends_on:
+      - rabbitmq
+    environment:
+      - tesseract_path=/usr/bin/tesseract
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672
+      - CELERY_RESULT_BACKEND=rpc://
+      - CELERY_ACCEPT_CONTENT=["pickle"]
     volumes:
       - .:/home
-
-#  rabbitmq:
-#    image: rabbitmq:3-management
-#    ports:
-#      - "5672:5672"
-#      - "15672:15672"
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  worker:
+    build: .  # Assuming your Celery app is in the current directory
+    container_name: worker
+    depends_on:
+      - rabbitmq
+      - web
+    environment:
+      - tesseract_path=/usr/bin/tesseract
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672
+      - CELERY_RESULT_BACKEND=rpc://
+      - CELERY_ACCEPT_CONTENT=["pickle","application/json"]
+      - C_FORCE_ROOT=true
+    working_dir: /home
+    command: celery -A service_layer.tasks worker -l info --pool=solo
+    volumes:
+      - .:/home
+  flower:
+    image: mher/flower
+    container_name: flower
+    command: celery flower
+    depends_on:
+      - rabbitmq
+    environment:
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672
+      - FLOWER_PORT=8888
+    ports:
+      - "8888:8888"
