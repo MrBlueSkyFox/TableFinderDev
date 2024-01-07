@@ -2,7 +2,7 @@ import PyInstaller.__main__
 from sys import platform
 
 if platform == "win32":
-    image_magic_path = "D:\Programms\ImageMagick-7.1.1-Q16-HDRI:wand"
+    image_magic_path = r"D:\Programms\ImageMagick-7.1.1-Q16-HDRI:wand"
 else:
     image_magic_path = "/usr/bin/convert:wand/convert"  # not sure if this works
 PyInstaller.__main__.run([
