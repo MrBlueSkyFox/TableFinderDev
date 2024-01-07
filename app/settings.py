@@ -41,4 +41,12 @@ class SettingsCLI(Settings):
 
 
 class SettingsWeb(Settings):
-    ...
+    CELERY_ACCEPT_CONTENT: list[str] = Field(
+        default=["pickle"]
+    )
+    CELERY_BROKER_URL: str = Field(
+        default="amqp://guest:guest@rabbitmq:5672"
+    )
+    CELERY_RESULT_BACKEND: str = Field(
+        default="rpc://"
+    )
