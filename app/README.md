@@ -20,14 +20,17 @@ example:
 \Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models" -ocr_cache "C:
 \Users\t.abraamyan\Documents\PythonPRJ\TableFinderDev\models\easy_ocr"
 
-create dev env for linux bin
-docker build -t table-dev-container .
-create container (Debian based)
-docker run -dit --restart=unless-stopped -v .:/home/app --name table_finder table-dev-container
-attach it using
-docker exec -it table_finder bash
-python to_exe.py
 
+create dev env for linux 
+docker-compose -p table_finder_v1 --build # build containers
+docker-compose -p table_finder_v1 up -d # run containers with default settings
+
+Create executable file in linux:
+docker exec -it table_finder_v1-web-1 /bin/bash # enter container
+python to_exe.py # compile binary 
+
+
+Run binary in linux
 chmod +x dist/table_finder
 ./table_finder -p /home/app/data/FIO_1/FIO_1_0.jpg \
     -o /home/app/res \
@@ -35,3 +38,9 @@ chmod +x dist/table_finder
     -t_cache /home/app/models \
     -ocr_cache /home/app/models/easy_ocr \
     -d True
+
+
+
+to_exe compile only one time CLI version of app
+if you want to use API ,
+then run docker-compose and follow to http://127.0.0.1/docs# to  learn what you can do 
