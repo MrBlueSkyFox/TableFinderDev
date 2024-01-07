@@ -55,3 +55,28 @@ def get_ocr_modules() -> list[ocr_interface.OcrInterface]:
         get_ocr_modules.instances.append(get_tesseract_ocr())
         get_ocr_modules.instances.append(get_easy_ocr())
     return get_ocr_modules.instances
+
+
+def setup(settings):
+    table_detection_model = get_table_detector(
+        settings.transformer_cache,
+        settings.table_detection_model_name
+    )
+    table_layout_detection_model = get_table_layout_detection_model(
+        settings.transformer_cache,
+        settings.table_layout_model_name
+    )
+    tesseract_ocr_model = get_tesseract_ocr(
+        settings.tesseract_path
+    )
+    easy_ocr_model = get_easy_ocr(
+        settings.easy_ocr_cache
+    )
+    ocr_modules_available = get_ocr_modules()
+    return (
+        table_detection_model,
+        table_layout_detection_model,
+        ocr_modules_available,
+        tesseract_ocr_model,
+        easy_ocr_model
+    )
