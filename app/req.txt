@@ -1,0 +1,11 @@
+fastapi
+python-multipart
+uvicorn[standard]
+pydantic
+pydantic-settings
+transformers
+wand
+easyocr
+pytesseract
+timm
+celery
