@@ -8,3 +8,4 @@ wand
 easyocr
 pytesseract
 timm
+celery
