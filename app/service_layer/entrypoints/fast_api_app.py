@@ -12,26 +12,7 @@ from .. import dependencies
 settings = SettingsWeb()
 app = FastAPI()
 
-
-def start_up():
-    dependencies.get_table_detector(
-        settings.transformer_cache,
-        settings.table_detection_model_name
-    )
-    dependencies.get_table_layout_detection_model(
-        settings.transformer_cache,
-        settings.table_layout_model_name
-    )
-    dependencies.get_tesseract_ocr(
-        settings.tesseract_path
-    )
-    dependencies.get_easy_ocr(
-        settings.easy_ocr_cache
-    )
-    dependencies.get_ocr_modules()
-
-
-start_up()
+dependencies.setup(settings)
 
 
 @app.post("/box")
